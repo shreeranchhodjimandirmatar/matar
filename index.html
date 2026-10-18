@@ -36,7 +36,7 @@
             min-height: 100vh;
             position: relative;
             box-shadow: 0 0 40px rgba(0, 0, 0, 0.05);
-            padding-bottom: 120px; /* Space for sticky footer */
+            padding-bottom: 120px;
         }
 
         /* Immersive Hero Section */
@@ -103,6 +103,50 @@
             display: block;
             background: #000;
             box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+        }
+
+        /* Bank Details Box */
+        .bank-details {
+            background-color: #FAFAFA;
+            border: 1px solid #E5E7EB;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 24px;
+        }
+
+        .bank-details h3 {
+            font-size: 18px;
+            color: var(--text-main);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .bank-row {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 12px;
+            padding-bottom: 12px;
+            border-bottom: 1px dashed #E5E7EB;
+        }
+
+        .bank-row:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .bank-label {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+        }
+
+        .bank-value {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-main);
         }
 
         /* Prasad Note */
@@ -176,7 +220,7 @@
 <body>
     <div class="app-container">
         
-        <!-- Hero Section with Image -->
+        <!-- Hero Section -->
         <header class="hero-section">
             <img src="MatarTemple.jpeg" alt="Shri Ranchhodji Mandir" class="hero-img">
             <div class="hero-overlay">
@@ -187,7 +231,7 @@
         <!-- Main Content -->
         <main class="content-section">
             <p class="description">
-                Support the restoration and ongoing development of the temple. Tap the button below to donate securely via your preferred UPI app (GPay, PhonePe, Paytm). 
+                Support the restoration and ongoing development of the temple. Tap the button below to donate securely via UPI, or use the bank details provided for direct transfers. 
             </p>
 
             <!-- Video Section -->
@@ -198,7 +242,28 @@
                 </video>
             </div>
 
-            <!-- Prasad Instruction Box (Updated) -->
+            <!-- Netbanking Details -->
+            <div class="bank-details">
+                <h3>🏦 Bank Transfer Details</h3>
+                <div class="bank-row">
+                    <span class="bank-label">Bank Name</span>
+                    <span class="bank-value">The Kheda District Central Co Operative Bank LTD</span>
+                </div>
+                <div class="bank-row">
+                    <span class="bank-label">Name of A/C</span>
+                    <span class="bank-value">Shri Ranchhodji Mandir, Matar</span>
+                </div>
+                <div class="bank-row">
+                    <span class="bank-label">SB A/C No.</span>
+                    <span class="bank-value">306060031925</span>
+                </div>
+                <div class="bank-row">
+                    <span class="bank-label">IFSC Code</span>
+                    <span class="bank-value">ICIC00KAIRA</span>
+                </div>
+            </div>
+
+            <!-- Prasad Instruction Box -->
             <div class="prasad-note">
                 <strong>🙏 To Receive Prasad:</strong> Kindly share a screenshot of your successful donation <strong>along with your complete postal address</strong> with us, so we can arrange to send the temple's Prasad to you as a blessing.
             </div>
