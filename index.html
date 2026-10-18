@@ -2,156 +2,218 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Shri Ranchhodji Mandir Donation</title>
     <style>
         :root {
-            --primary-color: #e67e22;
-            --primary-dark: #d35400;
-            --success-color: #27ae60;
-            --success-dark: #219150;
-            --bg-color: #f4f7f6;
-            --text-color: #333;
-            --text-muted: #555;
+            --brand-primary: #FF7E27;
+            --brand-secondary: #D84315;
+            --bg-body: #F4F5F7;
+            --surface: #FFFFFF;
+            --text-main: #1A1C20;
+            --text-muted: #6B7280;
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Mobile App Container */
+        .app-container {
+            max-width: 480px;
+            margin: 0 auto;
+            background-color: var(--surface);
             min-height: 100vh;
-            padding: 20px;
+            position: relative;
+            box-shadow: 0 0 40px rgba(0, 0, 0, 0.05);
+            padding-bottom: 120px; /* Space for sticky footer */
         }
 
-        .card {
-            background: #ffffff;
-            width: 100%;
-            max-width: 450px;
-            border-radius: 16px;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+        /* Immersive Hero Section */
+        .hero-section {
+            position: relative;
+            height: 350px;
+            border-bottom-left-radius: 40px;
+            border-bottom-right-radius: 40px;
             overflow: hidden;
-            text-align: center;
-        }
-
-        .media-container {
-            width: 100%;
             background-color: #eee;
+            transform: translateZ(0);
         }
 
-        .media-element {
+        .hero-img {
             width: 100%;
-            height: auto;
-            display: block;
-            max-height: 300px;
+            height: 100%;
             object-fit: cover;
         }
 
-        .content {
-            padding: 30px 20px;
+        .hero-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.2) 50%, transparent 100%);
+            display: flex;
+            align-items: flex-end;
+            padding: 40px 24px;
         }
 
-        h2 {
-            color: var(--primary-dark);
-            margin-bottom: 12px;
-            font-size: 24px;
+        .hero-title {
+            color: #FFFFFF;
+            font-size: 28px;
+            font-weight: 800;
+            line-height: 1.2;
+            text-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+            animation: fadeIn 0.8s ease-out;
         }
 
-        p {
+        /* Content Area */
+        .content-section {
+            padding: 30px 24px;
+            animation: slideUp 0.6s ease-out;
+        }
+
+        .description {
+            font-size: 16px;
             line-height: 1.6;
             color: var(--text-muted);
             margin-bottom: 24px;
-            font-size: 15px;
+            text-align: left;
         }
 
-        .media-grid {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
+        /* Video Showcase */
+        .video-showcase {
+            background: var(--bg-body);
+            border-radius: 24px;
+            padding: 8px;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
             margin-bottom: 24px;
         }
 
-        .video-wrapper {
+        .video-element {
             width: 100%;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-radius: 18px;
+            display: block;
+            background: #000;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
         }
 
-        .video-wrapper video {
-            width: 100%;
-            display: block;
-        }
-
-        .pay-btn {
-            display: block;
+        /* Prasad Note */
+        .prasad-note {
+            background-color: #FFF3E0;
+            border-left: 4px solid var(--brand-primary);
             padding: 16px;
+            border-radius: 8px;
+            font-size: 15px;
+            line-height: 1.5;
+            color: #E65100;
+            margin-bottom: 20px;
+        }
+
+        /* Sticky Bottom Bar */
+        .bottom-bar {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 480px;
+            padding: 20px 24px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-top: 1px solid rgba(0,0,0,0.05);
+            z-index: 100;
+        }
+
+        .donate-btn {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, var(--brand-primary), var(--brand-secondary));
+            color: #FFFFFF;
             font-size: 18px;
-            font-weight: 600;
-            color: #fff;
-            background-color: var(--success-color);
+            font-weight: 700;
             text-decoration: none;
-            border-radius: 10px;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 12px rgba(39, 174, 96, 0.3);
+            border-radius: 100px;
+            box-shadow: 0 8px 24px rgba(216, 67, 21, 0.3);
+            transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        .pay-btn:hover {
-            background-color: var(--success-dark);
-            transform: translateY(-2px);
+        .donate-btn:active {
+            transform: scale(0.96);
+            box-shadow: 0 4px 12px rgba(216, 67, 21, 0.2);
         }
 
-        .pay-btn:active {
-            transform: translateY(0);
-            box-shadow: 0 2px 6px rgba(39, 174, 96, 0.2);
+        .upi-icon {
+            width: 24px;
+            height: 24px;
+            fill: currentColor;
         }
 
-        /* Small mobile devices adjustment */
-        @media (max-width: 350px) {
-            .content {
-                padding: 20px 15px;
-            }
-            h2 {
-                font-size: 20px;
-            }
+        /* Animations */
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
     </style>
 </head>
 <body>
-    <div class="card">
-        <!-- Top Image Section -->
-        <div class="media-container">
-            <img src="MatarTemple.jpeg" alt="Shri Ranchhodji Mandir Temple Under Construction" class="media-element">
-        </div>
+    <div class="app-container">
         
-        <div class="content">
-            <h2>Shri Ranchhodji Mandir, Matar</h2>
-            <p>Tap the button below to donate securely via any UPI app on your phone (GPay, PhonePe, Paytm, etc.). You can enter your desired donation amount on the next screen.</p>
-            
+        <!-- Hero Section with Image -->
+        <header class="hero-section">
+            <img src="MatarTemple.jpeg" alt="Shri Ranchhodji Mandir" class="hero-img">
+            <div class="hero-overlay">
+                <h1 class="hero-title">Shri Ranchhodji Mandir,<br>Matar</h1>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="content-section">
+            <p class="description">
+                Support the restoration and ongoing development of the temple. Tap the button below to donate securely via your preferred UPI app (GPay, PhonePe, Paytm). 
+            </p>
+
             <!-- Video Section -->
-            <div class="media-grid">
-                <div class="video-wrapper">
-                    <!-- Replace "temple_video.mp4" with your actual video filename -->
-                    <video controls preload="metadata">
-                        <source src="temple_video.mp4" type="video/mp4">
-                        Your browser does not support the video tag.
-                    </video>
-                </div>
+            <div class="video-showcase">
+                <video class="video-element" controls preload="metadata" poster="MatarTemple.jpeg">
+                    <source src="MatarTemple.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
             </div>
 
-            <!-- Payment Button -->
-            <a class="pay-btn" href="upi://pay?pa=fyr0jdgpx5xt@gscb&pn=Shri%20Ranchhodji%20Mandir%2C%20Matar&tn=Donation&cu=INR">
-                Donate via UPI
+            <!-- Prasad Instruction Box -->
+            <div class="prasad-note">
+                <strong>🙏 Receive Prasad:</strong> Kindly share a screenshot of your successful donation with us at <strong>[Insert WhatsApp Number]</strong>, so we can arrange to send the temple's Prasad to you as a blessing.
+            </div>
+        </main>
+
+        <!-- Sticky Bottom CTA -->
+        <div class="bottom-bar">
+            <a class="donate-btn" href="upi://pay?pa=fyr0jdgpx5xt@gscb&pn=Shri%20Ranchhodji%20Mandir%2C%20Matar&tn=Donation&cu=INR">
+                <svg class="upi-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2v-6h2v6zm0-8h-2V6h2v2z"/>
+                </svg>
+                Donate securely via UPI
             </a>
         </div>
+
     </div>
 </body>
 </html>
