@@ -5,45 +5,153 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shri Ranchhodji Mandir Donation</title>
     <style>
+        :root {
+            --primary-color: #e67e22;
+            --primary-dark: #d35400;
+            --success-color: #27ae60;
+            --success-dark: #219150;
+            --bg-color: #f4f7f6;
+            --text-color: #333;
+            --text-muted: #555;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .card {
+            background: #ffffff;
+            width: 100%;
+            max-width: 450px;
+            border-radius: 16px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
             text-align: center;
-            padding: 40px 20px;
-            background-color: #f9f9f9;
-            color: #333;
         }
-        .container {
-            max-width: 400px;
-            margin: 0 auto;
-            background: white;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+
+        .media-container {
+            width: 100%;
+            background-color: #eee;
         }
-        h2 { color: #d35400; }
-        p { line-height: 1.5; color: #555; margin-bottom: 30px; }
+
+        .media-element {
+            width: 100%;
+            height: auto;
+            display: block;
+            max-height: 300px;
+            object-fit: cover;
+        }
+
+        .content {
+            padding: 30px 20px;
+        }
+
+        h2 {
+            color: var(--primary-dark);
+            margin-bottom: 12px;
+            font-size: 24px;
+        }
+
+        p {
+            line-height: 1.6;
+            color: var(--text-muted);
+            margin-bottom: 24px;
+            font-size: 15px;
+        }
+
+        .media-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 24px;
+        }
+
+        .video-wrapper {
+            width: 100%;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .video-wrapper video {
+            width: 100%;
+            display: block;
+        }
+
         .pay-btn {
             display: block;
             padding: 16px;
             font-size: 18px;
-            font-weight: bold;
+            font-weight: 600;
             color: #fff;
-            background-color: #27ae60;
+            background-color: var(--success-color);
             text-decoration: none;
-            border-radius: 8px;
-            transition: background-color 0.2s;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(39, 174, 96, 0.3);
         }
-        .pay-btn:active { background-color: #219150; }
+
+        .pay-btn:hover {
+            background-color: var(--success-dark);
+            transform: translateY(-2px);
+        }
+
+        .pay-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 6px rgba(39, 174, 96, 0.2);
+        }
+
+        /* Small mobile devices adjustment */
+        @media (max-width: 350px) {
+            .content {
+                padding: 20px 15px;
+            }
+            h2 {
+                font-size: 20px;
+            }
+        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h2>Shri Ranchhodji Mandir, Matar</h2>
-        <p>Tap the button below to donate securely via any UPI app on your phone (GPay, PhonePe, Paytm, etc.). You can enter your desired donation amount on the next screen.</p>
+    <div class="card">
+        <!-- Top Image Section -->
+        <div class="media-container">
+            <img src="MatarTemple.jpeg" alt="Shri Ranchhodji Mandir Temple Under Construction" class="media-element">
+        </div>
         
-        <a class="pay-btn" href="upi://pay?pa=fyr0jdgpx5xt@gscb&pn=Shri%20Ranchhodji%20Mandir%2C%20Matar&tn=Donation&cu=INR">
-            Donate via UPI
-        </a>
+        <div class="content">
+            <h2>Shri Ranchhodji Mandir, Matar</h2>
+            <p>Tap the button below to donate securely via any UPI app on your phone (GPay, PhonePe, Paytm, etc.). You can enter your desired donation amount on the next screen.</p>
+            
+            <!-- Video Section -->
+            <div class="media-grid">
+                <div class="video-wrapper">
+                    <!-- Replace "temple_video.mp4" with your actual video filename -->
+                    <video controls preload="metadata">
+                        <source src="temple_video.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+            </div>
+
+            <!-- Payment Button -->
+            <a class="pay-btn" href="upi://pay?pa=fyr0jdgpx5xt@gscb&pn=Shri%20Ranchhodji%20Mandir%2C%20Matar&tn=Donation&cu=INR">
+                Donate via UPI
+            </a>
+        </div>
     </div>
 </body>
 </html>
