@@ -36,7 +36,7 @@
             min-height: 100vh;
             position: relative;
             box-shadow: 0 0 40px rgba(0, 0, 0, 0.05);
-            padding-bottom: 120px;
+            padding-bottom: 150px;
         }
 
         /* Immersive Hero Section */
@@ -161,6 +161,81 @@
             margin-bottom: 20px;
         }
 
+        /* Donation Amount Controls */
+        .donation-box {
+            background: #F9FAFB;
+            border: 1px solid #E5E7EB;
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+
+        .donation-box label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-main);
+            margin-bottom: 8px;
+        }
+
+        .amount-input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .currency-symbol {
+            position: absolute;
+            left: 16px;
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .amount-input {
+            width: 100%;
+            padding: 14px 16px 14px 36px;
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-main);
+            background: #FFFFFF;
+            border: 1px solid #D1D5DB;
+            border-radius: 12px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .amount-input:focus {
+            border-color: var(--brand-primary);
+            box-shadow: 0 0 0 3px rgba(255, 126, 39, 0.15);
+        }
+
+        .preset-chips {
+            display: flex;
+            gap: 8px;
+        }
+
+        .chip {
+            flex: 1;
+            padding: 8px;
+            background: #FFFFFF;
+            border: 1px solid #D1D5DB;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-main);
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.2s;
+        }
+
+        .chip.active {
+            background: #FFF3E0;
+            border-color: var(--brand-primary);
+            color: var(--brand-secondary);
+        }
+
         /* Sticky Bottom Bar */
         .bottom-bar {
             position: fixed;
@@ -169,7 +244,7 @@
             transform: translateX(-50%);
             width: 100%;
             max-width: 480px;
-            padding: 20px 24px;
+            padding: 16px 24px;
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
@@ -183,7 +258,7 @@
             align-items: center;
             gap: 10px;
             width: 100%;
-            padding: 18px;
+            padding: 16px;
             background: linear-gradient(135deg, var(--brand-primary), var(--brand-secondary));
             color: #FFFFFF;
             font-size: 18px;
@@ -231,7 +306,7 @@
         <!-- Main Content -->
         <main class="content-section">
             <p class="description">
-                Support the restoration and ongoing development of the temple. Tap the button below to donate securely via UPI, or use the bank details provided for direct transfers. 
+                Support the restoration and ongoing development of the temple. Choose or enter your donation amount below and tap the button to pay securely via UPI, or use the bank details provided for direct transfers. 
             </p>
 
             <!-- Video Section -->
@@ -240,6 +315,21 @@
                     <source src="MatarTemple.mp4" type="video/mp4">
                     Your browser does not support the video tag.
                 </video>
+            </div>
+
+            <!-- Amount Selection Box -->
+            <div class="donation-box">
+                <label for="donationAmount">Select or Enter Amount</label>
+                <div class="amount-input-wrapper">
+                    <span class="currency-symbol">₹</span>
+                    <input type="number" id="donationAmount" class="amount-input" value="101" min="1" step="1" placeholder="Enter amount">
+                </div>
+                <div class="preset-chips">
+                    <div class="chip" onclick="setAmount(51)">₹51</div>
+                    <div class="chip active" onclick="setAmount(101)">₹101</div>
+                    <div class="chip" onclick="setAmount(501)">₹501</div>
+                    <div class="chip" onclick="setAmount(1001)">₹1001</div>
+                </div>
             </div>
 
             <!-- Netbanking Details -->
@@ -271,14 +361,51 @@
 
         <!-- Sticky Bottom CTA -->
         <div class="bottom-bar">
-           <a class="donate-btn" href="upi://pay?pa=fyr0jdgpx5xt@gscb&pn=Shri%20Ranchhodji%20Mandir%2C%20Matar&tn=Donation&cu=INR">
-    <svg class="upi-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2v-6h2v6zm0-8h-2V6h2v2z"/>
-    </svg>
-    Donate securely via UPI
-</a>
+            <a id="upiDonateBtn" class="donate-btn" href="upi://pay?pa=fyr0jdgpx5xt@gscb&pn=Shri%20Ranchhodji%20Mandir%2C%20Matar&am=101&tn=Donation&cu=INR">
+                <svg class="upi-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2v-6h2v6zm0-8h-2V6h2v2z"/>
+                </svg>
+                Donate securely via UPI
+            </a>
         </div>
 
     </div>
+
+    <script>
+        const inputField = document.getElementById('donationAmount');
+        const upiBtn = document.getElementById('upiDonateBtn');
+        const chips = document.querySelectorAll('.chip');
+        const payeeVpa = "fyr0jdgpx5xt@gscb";
+        const payeeName = "Shri Ranchhodji Mandir, Matar";
+
+        function updateLink() {
+            let val = parseFloat(inputField.value);
+            if (isNaN(val) || val < 1) {
+                val = 1; // Safeguard minimum amount for Amazon Pay
+            }
+            upiBtn.href = `upi://pay?pa=${payeeVpa}&pn=${encodeURIComponent(payeeName)}&am=${val}&tn=Donation&cu=INR`;
+        }
+
+        function setAmount(amt) {
+            inputField.value = amt;
+            updateLink();
+            
+            // Highlight active preset chip
+            chips.forEach(chip => {
+                if (chip.textContent.includes(amt)) {
+                    chip.classList.add('active');
+                } else {
+                    chip.classList.remove('active');
+                }
+            });
+        }
+
+        // Listen to manual typing changes
+        inputField.addEventListener('input', () => {
+            // Clear chip highlights if manual value doesn't match presets
+            chips.forEach(chip => chip.classList.remove('active'));
+            updateLink();
+        });
+    </script>
 </body>
 </html>
