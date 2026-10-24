@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Payment Status — Shri Ranchhodji Mandir</title>
+    <style>
+        :root {
+            --brand-primary: #FF7E27;
+            --brand-secondary: #D84315;
+            --success: #16A34A;
+            --success-light: #DCFCE7;
+            --error: #DC2626;
+            --error-light: #FEE2E2;
+            --bg-body: #F4F5F7;
+            --text-main: #1A1C20;
+            --text-muted: #6B7280;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background: var(--bg-body);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+        .card {
+            background: #fff;
+            border-radius: 28px;
+            padding: 44px 32px 36px;
+            max-width: 420px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+        }
+        .icon {
+            width: 88px; height: 88px;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 24px;
+        }
+        .icon svg { width: 48px; height: 48px; }
+        .icon.success { background: var(--success-light); animation: pulse 2s ease-in-out infinite; }
+        .icon.success svg { fill: var(--success); }
+        .icon.failed  { background: var(--error-light); }
+        .icon.failed  svg { fill: var(--error); }
+        .icon.loading { background: #F3F4F6; }
+        .spinner {
+            width: 40px; height: 40px;
+            border: 4px solid #E5E7EB;
+            border-top-color: var(--brand-primary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto;
+        }
+        h1 { font-size: 26px; font-weight: 800; color: var(--text-main); margin-bottom: 10px; }
+        .subtitle { font-size: 15px; color: var(--text-muted); line-height: 1.5; margin-bottom: 16px; }
+        .amount { font-size: 36px; font-weight: 800; color: var(--success); margin: 10px 0 6px; }
+        .pid {
+            font-size: 11px; color: #9CA3AF;
+            font-family: monospace; word-break: break-all; margin-bottom: 28px;
+        }
+        .btn {
+            display: block; width: 100%; padding: 15px;
+            background: linear-gradient(135deg, var(--brand-primary), var(--brand-secondary));
+            color: #fff; font-size: 16px; font-weight: 700;
+            border: none; border-radius: 100px;
+            box-shadow: 0 6px 20px rgba(216,67,21,0.3);
+            cursor: pointer; text-decoration: none;
+            transition: transform 0.2s;
+        }
+        .btn:active { transform: scale(0.97); }
+        @keyframes pulse {
+            0%,100% { box-shadow: 0 0 0 0 rgba(22,163,74,0.3); }
+            50%      { box-shadow: 0 0 0 14px rgba(22,163,74,0); }
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+    <div class="card" id="card">
+        <!-- Loading state by default -->
+        <div class="icon loading" id="iconEl">
+            <div class="spinner"></div>
+        </div>
+        <h1 id="titleEl">Verifying Payment…</h1>
+        <p class="subtitle" id="subtitleEl">Please wait while we confirm your donation.</p>
+        <div class="amount" id="amountEl" style="display:none"></div>
+        <div class="pid"    id="pidEl"></div>
+        <a href="/" class="btn" id="homeBtn" style="display:none">🏠 Back to Home</a>
+    </div>
+
+    <script>
+        const params  = new URLSearchParams(window.location.search);
+        const orderId = params.get('order_id');
+
+        const iconEl    = document.getElementById('iconEl');
+        const titleEl   = document.getElementById('titleEl');
+        const subtitleEl= document.getElementById('subtitleEl');
+        const amountEl  = document.getElementById('amountEl');
+        const pidEl     = document.getElementById('pidEl');
+        const homeBtn   = document.getElementById('homeBtn');
+
+        function showSuccess(data) {
+            iconEl.className = 'icon success';
+            iconEl.innerHTML = `<svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>`;
+            titleEl.textContent    = '🙏 Jai Shri Ranchhodji!';
+            subtitleEl.textContent = 'Your donation was received. May Shri Ranchhodji bless you and your family.';
+            amountEl.style.display = '';
+            amountEl.textContent   = '₹' + parseFloat(data.amount).toLocaleString('en-IN');
+            pidEl.textContent      = 'Payment ID: ' + data.payment_id;
+            homeBtn.style.display  = '';
+        }
+
+        function showFailed(msg) {
+            iconEl.className = 'icon failed';
+            iconEl.innerHTML = `<svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>`;
+            titleEl.textContent    = 'Payment Not Completed';
+            subtitleEl.textContent = msg || 'Something went wrong. Please try again or use Bank Transfer.';
+            pidEl.textContent      = orderId ? 'Order ID: ' + orderId : '';
+            homeBtn.style.display  = '';
+        }
+
+        async function verifyPayment() {
+            if (!orderId) {
+                showFailed('No order ID found. Please go back and try again.');
+                return;
+            }
+            try {
+                const res  = await fetch('/api/verify-payment', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ order_id: orderId })
+                });
+                const data = await res.json();
+
+                if (data.status === 'SUCCESS') {
+                    showSuccess(data);
+                } else {
+                    showFailed('Payment status: ' + data.status + '. If money was debited, please contact us.');
+                }
+            } catch (err) {
+                showFailed('Could not verify payment. Please check your bank statement.');
+            }
+        }
+
+        verifyPayment();
+    </script>
+</body>
+</html>
