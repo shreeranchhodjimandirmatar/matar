@@ -3,7 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Shri Ranchhodji Mandir, Matar</title>
+    <title>Shri Ranchhodji Mandir, Matar — Donate Online</title>
+    <meta name="description" content="Donate online to Shri Ranchhodji Mandir, Matar via Razorpay. Accept UPI, Credit/Debit Cards, Netbanking, and Wallets securely.">
+
+    <!--
+    ╔══════════════════════════════════════════════════════════════╗
+    ║         RAZORPAY SETUP GUIDE (Read Before Going Live)        ║
+    ╠══════════════════════════════════════════════════════════════╣
+    ║                                                              ║
+    ║  STEP 1 — Create a Free Account                              ║
+    ║  → Visit: https://dashboard.razorpay.com/signup              ║
+    ║  → Sign up with temple's email / phone                       ║
+    ║                                                              ║
+    ║  STEP 2 — Complete KYC (Required to go Live)                 ║
+    ║  → Business type: Trust / NGO / Religious Institution        ║
+    ║  → Documents: Trust deed / PAN Card / Bank account passbook  ║
+    ║                                                              ║
+    ║  STEP 3 — Get your API Key                                   ║
+    ║  → Dashboard → Settings → API Keys → Generate Test Key       ║
+    ║  → Copy the "Key ID" (starts with rzp_test_ or rzp_live_)   ║
+    ║  → NEVER copy the "Key Secret" into this file!               ║
+    ║                                                              ║
+    ║  STEP 4 — Replace the placeholder below                      ║
+    ║  → Find: RAZORPAY_KEY_ID_HERE                                ║
+    ║  → Replace with: your actual Key ID                          ║
+    ║                                                              ║
+    ║  STEP 5 — Test with Test Key, then switch to Live Key        ║
+    ║  → Razorpay Test Card: 4111 1111 1111 1111                   ║
+    ║                        Expiry: Any future | CVV: Any 3 digits║
+    ║                                                              ║
+    ║  PRICING: Free to start. 2% fee per successful transaction.  ║
+    ║  No monthly charges. Settlements in 2 business days.         ║
+    ╚══════════════════════════════════════════════════════════════╝
+    -->
+
+    <!-- Razorpay Checkout Script — loaded from Razorpay's CDN, no install needed -->
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
     <style>
         :root {
             --brand-primary: #FF7E27;
@@ -12,6 +48,8 @@
             --surface: #FFFFFF;
             --text-main: #1A1C20;
             --text-muted: #6B7280;
+            --success: #16A34A;
+            --success-light: #DCFCE7;
         }
 
         * {
@@ -105,6 +143,44 @@
             box-shadow: 0 8px 16px rgba(0,0,0,0.1);
         }
 
+        /* Payment Methods Info */
+        .payment-methods {
+            background: linear-gradient(135deg, #FFF3E0 0%, #FFF8F0 100%);
+            border: 1px solid rgba(255, 126, 39, 0.2);
+            border-radius: 16px;
+            padding: 18px 20px;
+            margin-bottom: 20px;
+        }
+
+        .payment-methods h3 {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--brand-secondary);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .method-badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .method-badge {
+            background: #FFFFFF;
+            border: 1px solid rgba(255, 126, 39, 0.25);
+            border-radius: 8px;
+            padding: 6px 12px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
         /* Bank Details Box */
         .bank-details {
             background-color: #FAFAFA;
@@ -149,18 +225,6 @@
             color: var(--text-main);
         }
 
-        /* Prasad Note */
-        .prasad-note {
-            background-color: #FFF3E0;
-            border-left: 4px solid var(--brand-primary);
-            padding: 16px;
-            border-radius: 8px;
-            font-size: 15px;
-            line-height: 1.5;
-            color: #E65100;
-            margin-bottom: 20px;
-        }
-
         /* Sticky Bottom Bar */
         .bottom-bar {
             position: fixed;
@@ -193,18 +257,17 @@
             border-radius: 100px;
             box-shadow: 0 8px 24px rgba(216, 67, 21, 0.3);
             cursor: pointer;
-            transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s;
+        }
+
+        .donate-btn:hover {
+            box-shadow: 0 12px 28px rgba(216, 67, 21, 0.4);
+            transform: translateY(-1px);
         }
 
         .donate-btn:active {
             transform: scale(0.96);
             box-shadow: 0 4px 12px rgba(216, 67, 21, 0.2);
-        }
-
-        .upi-icon {
-            width: 24px;
-            height: 24px;
-            fill: currentColor;
         }
 
         /* Popup Modal Styles */
@@ -269,6 +332,11 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            transition: background 0.2s;
+        }
+
+        .close-btn:hover {
+            background: #E5E7EB;
         }
 
         .donation-box {
@@ -346,10 +414,135 @@
             transition: all 0.2s;
         }
 
+        .chip:hover {
+            border-color: var(--brand-primary);
+            color: var(--brand-secondary);
+        }
+
         .chip.active {
             background: #FFF3E0;
             border-color: var(--brand-primary);
             color: var(--brand-secondary);
+        }
+
+        /* Secure badge below modal button */
+        .secure-note {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            margin-top: 12px;
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .secure-note svg {
+            width: 14px;
+            height: 14px;
+            fill: #16A34A;
+            flex-shrink: 0;
+        }
+
+        /* ─── Thank You Screen ─── */
+        .thankyou-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.65);
+            backdrop-filter: blur(6px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease;
+            padding: 24px;
+        }
+
+        .thankyou-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .thankyou-card {
+            background: #FFFFFF;
+            width: 100%;
+            max-width: 400px;
+            border-radius: 28px;
+            padding: 40px 28px 32px;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+            transform: scale(0.85) translateY(20px);
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .thankyou-overlay.active .thankyou-card {
+            transform: scale(1) translateY(0);
+        }
+
+        .thankyou-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--success-light);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            animation: pulse-success 2s ease-in-out infinite;
+        }
+
+        .thankyou-icon svg {
+            width: 44px;
+            height: 44px;
+            fill: var(--success);
+        }
+
+        .thankyou-title {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--text-main);
+            margin-bottom: 8px;
+        }
+
+        .thankyou-subtitle {
+            font-size: 15px;
+            color: var(--text-muted);
+            line-height: 1.5;
+            margin-bottom: 8px;
+        }
+
+        .thankyou-amount {
+            font-size: 32px;
+            font-weight: 800;
+            color: var(--success);
+            margin: 12px 0;
+        }
+
+        .thankyou-pid {
+            font-size: 11px;
+            color: #9CA3AF;
+            font-family: monospace;
+            margin-bottom: 24px;
+            word-break: break-all;
+        }
+
+        .thankyou-close-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, var(--brand-primary), var(--brand-secondary));
+            color: #FFFFFF;
+            font-size: 16px;
+            font-weight: 700;
+            border: none;
+            border-radius: 100px;
+            cursor: pointer;
+            box-shadow: 0 6px 20px rgba(216, 67, 21, 0.3);
+            transition: transform 0.2s;
+        }
+
+        .thankyou-close-btn:active {
+            transform: scale(0.97);
         }
 
         /* Animations */
@@ -362,6 +555,11 @@
             from { opacity: 0; }
             to { opacity: 1; }
         }
+
+        @keyframes pulse-success {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(22, 163, 74, 0.3); }
+            50% { box-shadow: 0 0 0 12px rgba(22, 163, 74, 0); }
+        }
     </style>
 </head>
 <body>
@@ -369,7 +567,7 @@
         
         <!-- Hero Section -->
         <header class="hero-section">
-            <img src="MatarTemple.jpeg" alt="Shri Ranchhodji Mandir" class="hero-img">
+            <img src="MatarTemple.jpeg" alt="Shri Ranchhodji Mandir, Matar" class="hero-img">
             <div class="hero-overlay">
                 <h1 class="hero-title">Shri Ranchhodji Mandir,<br>Matar</h1>
             </div>
@@ -377,12 +575,25 @@
 
         <!-- Main Content -->
         <main class="content-section">
-        <!-- Video Section -->
+
+            <!-- Video Section -->
             <div class="video-showcase">
                 <video class="video-element" controls preload="metadata" poster="MatarTemple.jpeg">
                     <source src="MatarTemple.mp4" type="video/mp4">
                     Your browser does not support the video tag.
                 </video>
+            </div>
+
+            <!-- Payment Methods Supported -->
+            <div class="payment-methods">
+                <h3>🔒 Secure Online Donation</h3>
+                <div class="method-badges">
+                    <span class="method-badge">📱 UPI</span>
+                    <span class="method-badge">💳 Credit Card</span>
+                    <span class="method-badge">💳 Debit Card</span>
+                    <span class="method-badge">🏦 Net Banking</span>
+                    <span class="method-badge">👛 Wallet</span>
+                </div>
             </div>
 
             <!-- Netbanking Details -->
@@ -409,27 +620,29 @@
 
         <!-- Sticky Bottom CTA -->
         <div class="bottom-bar">
-            <button class="donate-btn" onclick="openModal()">
-                <svg class="upi-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2v-6h2v6zm0-8h-2V6h2v2z"/>
+            <button id="donateMainBtn" class="donate-btn" onclick="openModal()">
+                <!-- Razorpay Icon (simplified) -->
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <rect width="20" height="14" x="2" y="5" rx="2"/>
+                    <line x1="2" x2="22" y1="10" y2="10"/>
                 </svg>
-                Donate securely via UPI
+                Donate Securely Online
             </button>
         </div>
 
     </div>
 
-    <!-- Amount Selection Popup Modal -->
+    <!-- ─── Amount Selection Popup Modal ─── -->
     <div id="modalOverlay" class="modal-overlay" onclick="handleOutsideClick(event)">
         <div class="modal-card">
             <div class="modal-header">
-                <h3 class="modal-title">Select Donation Amount</h3>
-                <button class="close-btn" onclick="closeModal()">✕</button>
+                <h2 class="modal-title">Select Donation Amount</h2>
+                <button class="close-btn" onclick="closeModal()" aria-label="Close">✕</button>
             </div>
 
             <div class="donation-box">
-                <label for="donationAmount">Choose a preset or type any custom amount</label>
-                <div class="custom-hint">💡 You can easily change this to any custom amount you like.</div>
+                <label for="donationAmount">Choose a preset or enter any amount</label>
+                <div class="custom-hint">💡 You can type any custom amount you like</div>
                 
                 <div class="amount-input-wrapper">
                     <span class="currency-symbol">₹</span>
@@ -442,22 +655,64 @@
                     <div class="chip" onclick="setAmount(1001)">₹1001</div>
                 </div>
             </div>
-            <button class="donate-btn" onclick="proceedToPay()">
+
+            <button id="proceedBtn" class="donate-btn" onclick="proceedToPay()">
                 Proceed to Pay
             </button>
+
+            <div class="secure-note">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-1 14l-4-4 1.41-1.41L11 12.17l6.59-6.59L19 7l-8 8z"/>
+                </svg>
+                Payments are 100% secure &amp; powered by Razorpay
+            </div>
+        </div>
+    </div>
+
+    <!-- ─── Thank You Screen (shown after successful payment) ─── -->
+    <div id="thankyouOverlay" class="thankyou-overlay">
+        <div class="thankyou-card">
+            <div class="thankyou-icon">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/>
+                </svg>
+            </div>
+            <div class="thankyou-title">🙏 Jai Shri Ranchhodji!</div>
+            <div class="thankyou-subtitle">Your donation has been received. May Shri Ranchhodji bless you and your family.</div>
+            <div class="thankyou-amount" id="thankyouAmount">₹0</div>
+            <div class="thankyou-pid" id="thankyouPid"></div>
+            <button class="thankyou-close-btn" onclick="closeThankYou()">Back to Home</button>
         </div>
     </div>
 
     <script>
-        const modalOverlay = document.getElementById('modalOverlay');
-        const inputField = document.getElementById('donationAmount');
-        const chips = document.querySelectorAll('.chip');
-        const payeeVpa = "fyr0jdgpx5xt@gscb";
-        const payeeName = "Shri Ranchhodji Mandir, Matar";
+        // ─────────────────────────────────────────────────────────────
+        //  RAZORPAY CONFIGURATION
+        //  ⚠️  Replace "RAZORPAY_KEY_ID_HERE" with your actual Key ID
+        //
+        //  How to get your Key ID:
+        //    1. Go to https://dashboard.razorpay.com
+        //    2. Settings → API Keys → Generate Key
+        //    3. Copy the "Key ID" (NOT the Key Secret)
+        //    4. Use Test Key (rzp_test_...) while testing
+        //    5. Switch to Live Key (rzp_live_...) when going live
+        //
+        //  The Key ID is SAFE to put in public HTML — it's like a
+        //  username. Never put the Key Secret here.
+        // ─────────────────────────────────────────────────────────────
+        const RAZORPAY_KEY_ID = "RAZORPAY_KEY_ID_HERE";
+
+        const modalOverlay   = document.getElementById('modalOverlay');
+        const thankyouOverlay = document.getElementById('thankyouOverlay');
+        const inputField     = document.getElementById('donationAmount');
+        const chips          = document.querySelectorAll('.chip');
+        const proceedBtn     = document.getElementById('proceedBtn');
+
+        // ─── Modal Controls ───────────────────────────────────────────
 
         function openModal() {
             modalOverlay.classList.add('active');
-            inputField.focus();
+            setTimeout(() => inputField.focus(), 350);
         }
 
         function closeModal() {
@@ -470,14 +725,12 @@
             }
         }
 
+        // ─── Amount Chip Selection ────────────────────────────────────
+
         function setAmount(amt) {
             inputField.value = amt;
             chips.forEach(chip => {
-                if (chip.textContent.includes(amt)) {
-                    chip.classList.add('active');
-                } else {
-                    chip.classList.remove('active');
-                }
+                chip.classList.toggle('active', chip.textContent.includes(amt));
             });
         }
 
@@ -485,15 +738,133 @@
             chips.forEach(chip => chip.classList.remove('active'));
         });
 
+        // ─── Razorpay Payment ─────────────────────────────────────────
+
         function proceedToPay() {
             let val = parseFloat(inputField.value);
             if (isNaN(val) || val < 1) {
-                val = 1; // Minimum guardrail for Amazon Pay
+                inputField.style.borderColor = '#EF4444';
+                inputField.focus();
+                setTimeout(() => inputField.style.borderColor = '', 1500);
+                return;
             }
-            const upiUrl = `upi://pay?pa=${payeeVpa}&pn=${encodeURIComponent(payeeName)}&am=${val}&tn=Donation&cu=INR`;
-            
-            window.location.href = upiUrl;
-            closeModal();
+
+            // Disable button to prevent double-taps
+            proceedBtn.disabled = true;
+            proceedBtn.textContent = 'Opening Payment…';
+
+            const amountInPaise = Math.round(val * 100); // Razorpay uses paise (₹1 = 100 paise)
+
+            const options = {
+                /*
+                 * Replace RAZORPAY_KEY_ID_HERE with your Key ID (above).
+                 * Test mode  → use rzp_test_XXXXXXXXXXXXXXXXXX
+                 * Live mode  → use rzp_live_XXXXXXXXXXXXXXXXXX
+                 */
+                key: RAZORPAY_KEY_ID,
+
+                amount: amountInPaise,
+                currency: "INR",
+
+                name: "Shri Ranchhodji Mandir, Matar",
+                description: "Seva / Donation",
+
+                /*
+                 * Logo shown inside the Razorpay checkout popup.
+                 * After you push to GitHub Pages, update this URL:
+                 *   https://YOUR_GITHUB_USERNAME.github.io/shreeranchhodjimandir/MatarTemple.jpeg
+                 * Leave blank ("") if you haven't deployed yet.
+                 */
+                image: "",
+
+                /*
+                 * NOTE ON order_id:
+                 * A standard Razorpay integration creates an order_id on
+                 * a backend server. Since this site is static (GitHub Pages),
+                 * we skip the order_id. This is acceptable for donations —
+                 * payments are still captured and settled to your bank.
+                 * If you later want a full backend, consider Netlify Functions
+                 * or Vercel Serverless (both free tier).
+                 */
+
+                handler: function (response) {
+                    // This function runs when payment is SUCCESSFUL
+                    showThankYou(response.razorpay_payment_id, val);
+                },
+
+                prefill: {
+                    // These can be left empty — Razorpay will ask the donor
+                    name:    "",
+                    email:   "",
+                    contact: ""
+                },
+
+                notes: {
+                    purpose: "Temple Donation",
+                    temple:  "Shri Ranchhodji Mandir, Matar"
+                },
+
+                theme: {
+                    color: "#FF7E27" // Brand orange — matches the website
+                },
+
+                modal: {
+                    ondismiss: function () {
+                        // User closed the Razorpay popup without completing payment
+                        proceedBtn.disabled    = false;
+                        proceedBtn.textContent = 'Proceed to Pay';
+                    },
+                    escape: true,
+                    backdropclose: false
+                }
+            };
+
+            try {
+                const rzp = new Razorpay(options);
+
+                rzp.on('payment.failed', function (response) {
+                    // Payment attempt failed (card declined, insufficient funds, etc.)
+                    proceedBtn.disabled    = false;
+                    proceedBtn.textContent = 'Proceed to Pay';
+                    alert('Payment failed: ' + (response.error.description || 'Please try again.'));
+                });
+
+                closeModal();
+                rzp.open();
+
+            } catch (err) {
+                // Razorpay script not loaded (e.g., offline) or Key ID not set
+                proceedBtn.disabled    = false;
+                proceedBtn.textContent = 'Proceed to Pay';
+
+                if (RAZORPAY_KEY_ID === "RAZORPAY_KEY_ID_HERE") {
+                    alert(
+                        '⚠️ Razorpay is not configured yet.\n\n' +
+                        'Please replace "RAZORPAY_KEY_ID_HERE" in index.html with your actual Razorpay Key ID.\n\n' +
+                        'See the setup guide at the top of the HTML file for instructions.'
+                    );
+                } else {
+                    alert('Could not open payment. Please check your internet connection and try again.');
+                }
+            }
+        }
+
+        // ─── Thank You Screen ─────────────────────────────────────────
+
+        function showThankYou(paymentId, amount) {
+            document.getElementById('thankyouAmount').textContent = '₹' + amount.toLocaleString('en-IN');
+            document.getElementById('thankyouPid').textContent    = 'Payment ID: ' + paymentId;
+            thankyouOverlay.classList.add('active');
+
+            // Reset the proceed button for if user comes back
+            proceedBtn.disabled    = false;
+            proceedBtn.textContent = 'Proceed to Pay';
+        }
+
+        function closeThankYou() {
+            thankyouOverlay.classList.remove('active');
+            // Reset amount to default
+            setAmount(101);
         }
     </script>
 </body>
